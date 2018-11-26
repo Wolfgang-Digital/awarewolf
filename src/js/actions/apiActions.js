@@ -393,3 +393,76 @@ export const removeAvater = token => {
       });
   };
 };
+
+export const confirmResetPassword = data => {
+  return dispatch => {
+    dispatch({ type: actionTypes.AWAITING_RESPONSE });
+
+    api.makeRequest({
+      endpoint: `/auth/confirm-reset`,
+      payload: {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ data })
+      }
+    })
+      .then(res => {
+        if (res.success) {
+          const id = uuid();
+
+          const user = res.data;
+          document.cookie = `wolfganger=${JSON.stringify(user)};`;
+
+          dispatch({
+            type: actionTypes.USER_AUTH_SUCCESS,
+            user,
+            message: { id, message: 'Password reset successful!', type: 'success' }
+          });
+
+          window.setTimeout(() => dispatch({
+            type: actionTypes.REMOVE_MESSAGES,
+            id
+          }), MESSAGE_DURATION);
+
+        } else {
+          // Dispatch error message.
+          setErrorMessage(dispatch, res.messages);
+        }
+      })
+      .catch(err => {
+        setErrorMessage(dispatch, err);
+      });
+  };
+};
+
+export const requestResetPassword = email => {
+  return dispatch => {
+    dispatch({ type: actionTypes.AWAITING_RESPONSE });
+
+    api.makeRequest({ endpoint: `/auth/request-reset/${encodeURIComponent(email)}` })
+      .then(res => {
+        if (res.success) {
+          const id = uuid();
+
+          dispatch({
+            type: actionTypes.REQUEST_RESET_PASSWORD,
+            message: { id, message: `Sent to: ${email}`, type: 'success' }
+          });
+
+          window.setTimeout(() => dispatch({
+            type: actionTypes.REMOVE_MESSAGES,
+            id
+          }), MESSAGE_DURATION);
+
+        } else {
+          // Dispatch error message.
+          setErrorMessage(dispatch, res.messages);
+        }
+      })
+      .catch(err => {
+        setErrorMessage(dispatch, err);
+      });
+  };
+};

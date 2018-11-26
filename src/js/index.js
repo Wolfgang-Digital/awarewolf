@@ -18,7 +18,8 @@ import {
 	Rules,
 	CreateSurvey,
 	PollSurveyList,
-	Survey
+	Survey,
+	PasswordReset
 } from './components';
 
 const REDIRECT_TIMEOUT = 1000 * 2;
@@ -61,6 +62,7 @@ class App extends Component {
 							authorised={this.props.loggedIn} 
 							timeout={REDIRECT_TIMEOUT}
 						/>
+						<Route exact path='/reset-password/:resetToken' component={PasswordReset} />
 						<Route exact path='/login' component={Login} />
 						<ProtectedRoute 
 							exact path='/low-down' 

@@ -46,6 +46,7 @@ export default (state = initialState, action) => {
     case actionTypes.PIN_POST_SUCCESS:
     case actionTypes.AVATAR_UPLOAD_SUCCESS:
     case actionTypes.AVATAR_REMOVE_SUCCESS:
+    case actionTypes.REQUEST_RESET_PASSWORD:
       return {
         ...state,
         messages: [...state.messages, action.message]

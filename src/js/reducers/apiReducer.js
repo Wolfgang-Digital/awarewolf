@@ -10,6 +10,7 @@ const initialState = {
 export default (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.USER_AUTH_SUCCESS:
+    case actionTypes.RESET_PASSWORD_SUCCESS:
       return {
         ...state,
         user: action.user,
@@ -62,6 +63,7 @@ export default (state = initialState, action) => {
       };
 
     case actionTypes.SET_MESSAGES:
+    case actionTypes.REQUEST_RESET_PASSWORD:
       return {
         ...state,
         awaitingResponse: false

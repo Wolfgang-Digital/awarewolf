@@ -12,6 +12,7 @@ import Rules from './rules';
 import CreateSurvey from './create-survey';
 import PollSurveyList from './poll-survey-list';
 import Survey from './survey';
+import PasswordReset from './password-reset';
 
 export {
   Header,
@@ -27,5 +28,6 @@ export {
   Rules,
   CreateSurvey,
   PollSurveyList,
-  Survey
+  Survey,
+  PasswordReset
 };

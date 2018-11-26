@@ -15,7 +15,8 @@ const mapDispatchToProps = dispatch => {
   return {
     login: (email, password) => dispatch(apiActions.login({ email, password })),
     signup: data => dispatch(apiActions.signup(data)),
-    setError: msg => dispatch(viewActions.setErrorMessages([msg]))
+    setError: msg => dispatch(viewActions.setErrorMessages([msg])),
+    requestReset: email => dispatch(apiActions.requestResetPassword(email))
   };
 };
 
@@ -53,6 +54,10 @@ class LoginContainer extends Component {
   };
 
   toggleLogin = () => this.setState(prev => ({ isLogin: !prev.isLogin }));
+
+  requestPasswordReset = () => {
+    this.props.requestReset(this.state.email);
+  };
 
   render() {
     const { email, password, confirmPassword, isLogin } = this.state;
@@ -122,7 +127,10 @@ class LoginContainer extends Component {
               }
             </form>
             <Switch onClick={this.toggleLogin}>
-              { isLogin ? 'Sign up instead.' : 'Login instead.' }
+              { isLogin ? 'Sign up instead' : 'Login instead' }
+            </Switch>
+            <Switch onClick={this.requestPasswordReset}>
+              Reset password
             </Switch>
           </Wrapper>
         </GridItem>
