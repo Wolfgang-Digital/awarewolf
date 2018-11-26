@@ -56,6 +56,9 @@ class LoginContainer extends Component {
   toggleLogin = () => this.setState(prev => ({ isLogin: !prev.isLogin }));
 
   requestPasswordReset = () => {
+    if (!this.state.email) {
+      this.props.setError('Email cannot be blank.');
+    }
     this.props.requestReset(this.state.email);
   };
 
