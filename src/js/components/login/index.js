@@ -58,6 +58,7 @@ class LoginContainer extends Component {
   requestPasswordReset = () => {
     if (!this.state.email) {
       this.props.setError('Email cannot be blank.');
+      return;
     }
     this.props.requestReset(this.state.email);
   };
