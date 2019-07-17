@@ -12,6 +12,19 @@ class Api {
     }
   };
 
+  fetchUsers = token => {
+    return this.makeRequest({
+      endpoint: '/api/users',
+      payload: {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          token
+        }
+      }
+    });
+  };
+
   login = data => {
     return this.makeRequest({
       endpoint: '/auth/login',

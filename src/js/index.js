@@ -40,9 +40,6 @@ const mapDispatchToProps = dispatch => {
 
 class App extends Component {
 	componentDidMount() {
-		fetch('https://awarewolf-api.herokuapp.com')
-			.catch(console.log);
-			
 		if (!this.props.loggedIn) this.props.tryGetUserFromStorage();
 	}
 

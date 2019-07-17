@@ -10,6 +10,9 @@ import Tippy from '@tippy.js/react';
 import Question from './Question';
 import uuid from 'uuid/v1';
 import { validateForm } from './validate';
+import api from '../../utils/api';
+import Dropdown from '../Dropdown';
+import { formatName } from '../../utils';
 
 const mapStateToProps = state => {
   return {
@@ -26,10 +29,19 @@ const mapDispatchToProps = dispatch => {
 
 class CreateSurvey extends Component {
   state = {
+    users: [],
     title: '',
     description: '',
-    questions: []
+    questions: [],
+    visibleTo: []
   };
+
+  async componentDidMount() {
+    const users = await api.fetchUsers(this.props.user.token);
+    if (users.data) {
+      this.setState({ users: users.data.map(u => ({ label: formatName(u.username), value: u._id })) });
+    }
+  }
 
   handleTitleChange = ({ target: { value }}) => this.setState({ title: value });
 
@@ -130,18 +142,31 @@ class CreateSurvey extends Component {
   };
 
   submitSurvey = () => {
-    const { title, description, questions } = this.state;
+    const { title, description, questions, visibleTo } = this.state;
     const errors = validateForm(title, questions);
     if (errors.length > 0) {
       this.props.setErrorMessages(errors);
       return;
     }
-    console.log({ title, description, questions });
+
     this.props.submitSurvey({
       title,
       description,
+      visibleTo,
       questions
     }, this.props.user.token);
+  };
+
+  handleDropdown = ({ action, value }) => {
+    let visibleTo = this.state.visibleTo;
+    if (action === `SELECT`) {
+      visibleTo.push(value);
+    } else if (action === `REMOVE`) {
+      visibleTo = visibleTo.filter(n => n !== value);
+    } else if (action === `CLEAR`) {
+      visibleTo = [];
+    }
+    this.setState({ visibleTo });
   };
 
   render() {
@@ -163,6 +188,12 @@ class CreateSurvey extends Component {
                 value={description}
                 handleChange={this.handleDescriptionChange}
                 label={`Description (Optional)`}
+              />
+              <Dropdown
+                placeholder="Only show this survey to selected users (leave empty to show to all)"
+                handleChange={this.handleDropdown}
+                options={this.state.users}
+                isMulti
               />
               <Summary>
                 <h3>Questions</h3><span className='m-left'>{`(${questions.length})`}</span>
